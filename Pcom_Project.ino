@@ -8,8 +8,8 @@
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
 
-#define RST_PIN         13           // Configurable, see typical pin layout above
-#define SS_PIN          10          // Configurable, see typical pin layout above
+#define RST_PIN         13 
+#define SS_PIN          10    
 
 #define STATE_UNKNOWN       0
 #define STATE_START         1
@@ -20,19 +20,19 @@
 #define STATE_TIMER_PAUSED  6
 #define STATE_TIMER_ENDED   7
 
-#define BUTTON_ADD    4
-#define BUTTON_REMOVE 5
+#define BUTTON_ADD    4 //pin for the button that adds to the timer
+#define BUTTON_REMOVE 5 //pin for the button that subtracts from the timer
 
 #define BUTTON_PAUSE  4
 #define BUTTON_RESUME 4
 
 #define TIMER_BASE     180000
 #define TIMER_INTERVAL 60000
-#define TIMER_BUTTON_DELAY    1500
+#define TIMER_BUTTON_DELAY    200
 
 #define PAUSE_FLASH_ON     1000
 #define PAUSE_FLASH_OFF    500
-#define PAUSE_BUTTON_DELAY 1000
+#define PAUSE_BUTTON_DELAY 200 //changes delay time before being able to press the button more
 
 int state = STATE_UNKNOWN;
 
@@ -165,7 +165,7 @@ void loop() {
   lastLoop = currentTime;
 }
 
-boolean waitForCard() {
+boolean waitForCard() { //repeats the string until a card/tag is present on the reader
   if ( ! mfrc522.PICC_IsNewCardPresent()) {
     Serial.println("New card not present!");
     return false;
@@ -240,17 +240,17 @@ void changeState(int s) {
   Serial.println(".");
 }
 
-void displayTimerEnd() {
+void displayTimerEnd() { //for when the timer ends
   display.clearDisplay();
 
-  display.setTextSize(3);
+  display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0, 10);
   display.println("Timer done, please reset!");
   display.display();
 }
 
-void displayTime() {
+void displayTime() { //displays time remaining on the timer on the OLED screen
   char str[6];
   display.clearDisplay();
 
@@ -286,7 +286,7 @@ boolean isCard() {
   return true;
 }
 
-boolean isTag() {
+boolean isTag() { 
   for (int i = 0; i < 4; i++) {
     if (tagID[i] != key.keyByte[i]) {
       return false;
@@ -295,14 +295,14 @@ boolean isTag() {
   return true;
 }
 
-void printHex(byte *buffer, byte bufferSize) {
+void printHex(byte *buffer, byte bufferSize) { //prints Hex value in the serial monitor
   for (byte i = 0; i < bufferSize; i++) {
     Serial.print(buffer[i] < 0x10 ? " 0" : " ");
     Serial.print(buffer[i], HEX);
   }
 }
 
-void printDec(byte *buffer, byte bufferSize) {
+void printDec(byte *buffer, byte bufferSize) { //prints Dec value in the serial monitor
   for (byte i = 0; i < bufferSize; i++) {
     Serial.print(buffer[i] < 0x10 ? " 0" : " ");
     Serial.print(buffer[i], DEC);
